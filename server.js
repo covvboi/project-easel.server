@@ -5,6 +5,8 @@ const bodyParser = require('body-parser');  //요청데이터 해석을 도와�
 const cors = require('cors');  //이거뭐였는지 확인해보자
 const methodOverride = require('method-override')  
 
+require('dotenv').config();
+
 app.use(methodOverride('_method'))  // 수정을 위한
 app.use(bodyParser.urlencoded({extended : true})) //요청에있는걸 꺼내서 사용하려면 body-parser이라는 라이브러리 사용해야함
 app.use(express.json());
@@ -14,14 +16,14 @@ const MongoClient = require('mongodb').MongoClient;
 
 var db;  //변수생성 해줘야함
 
-MongoClient.connect('mongodb+srv://covvboi:rla1927@cluster0.lvods.mongodb.net/myFirstDatabase?retryWrites=true&w=majority', function(err,client){
+MongoClient.connect(process.env.DB_URL, function(err,client){
   
   if(err) return console.log(err);
   db = client.db('easel');
 })
 
 const http = require('http').createServer(app);
-  http.listen(8080, function () {
+   http.listen(process.env.PORT, function () {
    console.log('listening on 8080')                                                                     
 }); 
 
@@ -94,18 +96,8 @@ passport.deserializeUser(function(아이디, done){
   })
 })
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//////////// 데이터 보여주는 부분  ////////////////////////// 데이터 보여주는 부분  /////////////////// 데이터 보여주는 부분  /////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// app.get('/view', function(req,res){
-//   db.collection('post').find().toArray(function(err, result){
-//     res.sendFile( path.join(__dirname, 'easell/build/index.html'))
-   
-//     res.json(result); // 프론트(클라이언트)에게 응답을 해줌 result값을
-//     console.log(result);
-    
-//   });
-// })
+
+
 
 /////////////////////// College A/////////////////////////  College A ////////////////////// College A//////////////////////// College A///////////////
 app.get('/view1', function(req,res){
@@ -123,6 +115,8 @@ app.get('/commentview1/:id', function(req,res){
     console.log(result);
   })
 })
+
+
 
 
 /////////////////////// College B/////////////////////////  College B ////////////////////// College B//////////////////////// College B///////////////
@@ -192,30 +186,14 @@ app.get('/mypageview3', function(req,res){
 
 
 
-
-//////////////TEST///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-////// 데이터를 한개만 보이게(findOne) //////////// 데이터를 한개만 보이게(findOne) //////////// 데이터를 한개만 보이게(findOne) //////////// 데이터를 한개만 보이게(findOne) /////////////////
-// app.get('/view/:id', function(req,res){
-//   db.collection('post').findOne({ _id : parseInt(req.params.id)}, function(err,result){
-//     res.sendFile( path.join(__dirname, 'easell/build/index.html'))
-
+// ////// test
+// app.get('/unicheck', function(req,res){
+//   db.collection('university-check').find().toArray(function(err, result){
 //     res.json(result); // 프론트(클라이언트)에게 응답을 해줌 result값을
 //     // res.send(result);
 //     console.log(result);
 //   })
 // })
-// //////////데이터를 수정///////////////////데이터를 수정///////////////////데이터를 수정///////////////////데이터를 수정///////////////////데이터를 수정///////////////////데이터를 수정/////////
-// app.put('/edit',function(req,res){
-//   db.collection('post').updateOne({ _id : parseInt(req.body.id)},{ $set : { 작품명 : req.body.title, 작품설명 : req.body.explain, 작가한마디 : req.body.comment}},function(err,result){
-//       console.log('수정완료');
-//       // res.json(result); 
-//       console.log(err);
-//       res.send('전송123123완료');
-//   })
-// })
-// ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 
 
 
@@ -285,16 +263,6 @@ app.put('/edit3',function(req,res){
 
 
 
-
-///////// 삭제///////////////// 삭제///////////////// 삭제///////////////// 삭제///////////////// 삭제///////////////// 삭제///////////////// 삭제/////////////
-// app.delete('/view', function(req, res){
-//   console.log(req.body);
-//   db.collection('post').deleteOne(req.body, function(err, result){
-//      console.log('삭제완료');
-//     //  res.status(200).send({ message : '성공' });
-//   })
-// })
-
 /////////////////////// College A/////////////////////////  College A ////////////////////// College A//////////////////////// College A///////////////
 app.delete('/mypageview1', function(req, res){
   console.log(req.body);
@@ -358,6 +326,7 @@ function 로그인확인(req, res, next){   //미들웨어 부분
 }
 
 
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 app.get('*', function(req, res){
   res.sendFile( path.join(__dirname, 'easell/build/index.html'))
@@ -395,32 +364,8 @@ app.get('/image/:imageName', function(req,res){
 })
 ///////////////////////////////////////////////////////
 
-////////////////////////// mongodb에 저장하는 부분 ////////////////////////////
-// app.post('/add' , function(req,res){   //요청에있는걸 꺼내서 사용하려면 body-parser이라는 라이브러리 사용해야함
-      
-//       res.redirect('/maina')
 
-//       console.log(req.body);
-      
-//       db.collection('counter').findOne({name : '게시물갯수'}, function(err,result){
-//         var 총게시물갯수 = result.totalPost;
-        
-//         db.collection('post').insertOne({ _id : 총게시물갯수 + 1 ,작품명: req.body.title , 작품설명: req.body.explain, 작가한마디: req.body.comment}, function(err,result){
-//           console.log('저장완료fasdf');
-          
-          
-//           db.collection('counter').updateOne({name : '게시물갯수'},{ $inc : {totalPost:1 }},function(err,result){
-//             if(err){return console.log(에러)}
-            
-//           })  
-//         })
-        
-//       })
-//     })
-    
 
-    
-    
     
     /////////College A Post ///////////////////College A Post ///////////////////College A Post ///////////////////College A Post ///////////
     app.post('/add1' , upload.single('작품') ,function(req,res){   //요청에있는걸 꺼내서 사용하려면 body-parser이라는 라이브러리 사용해야함
@@ -452,7 +397,6 @@ app.get('/image/:imageName', function(req,res){
     
       })
     })
-
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////???
@@ -539,14 +483,12 @@ app.post('/comment3', function(req, res){
 
 
 
-
-
 /////// mongodb에 회원가입 정보 저장하는 부분 ////////
 app.post('/add/2', upload.single('프로필'),function(req, res){
 
   // res.send('전송완료');
 
-  db.collection('login').insertOne({ id: req.body.id ,pw: req.body.pw, email: req.body.email, nickname: req.body.nickname, userimg: req.file.originalname}, function(err, result){
+  db.collection('login').insertOne({ id: req.body.id ,pw: req.body.pw, email: req.body.email, nickname: req.body.nickname, userimg: req.file.originalname, userin: false }, function(err, result){
     console.log(result);
     console.log('회원가입완료');
     res.redirect('/')
@@ -555,43 +497,28 @@ app.post('/add/2', upload.single('프로필'),function(req, res){
 
 
 
-
 //////////////이메일 인증번호 보내주기 //////////////
 
-const nodemailer = require('nodemailer');
 var randomnum = Math.random().toString(36).slice(7);
-
-app.get('/innum', function(req, res){
-  // req.json(results)
-  // res.json(result);
-  res.json(randomnum);
-  
-} )
+const nodemailer = require('nodemailer');
 
 app.post('/uniin', function(req, res){
 
-  
-   let data = req.body
-   let innum = req.body
-   let checkmail = randomnum;
-   let test2 = "안녕하세요"
+
+  let data = req.body
+  let checkmail = randomnum;
    
-   const results = {
-     message : checkmail,
-     code : 2
-   };
- 
 
    const mailTransporter = nodemailer.createTransport({
      service: "gmail",
      auth:{
-       user: "rlgjs34@gmail.com",
-       pass: "rla138604!"
+       user: process.env.MAIL_ID,
+       pass: process.env.MAIL_PW
       } 
     })
     
     const details = {
-      from: "rlgjs34@gmail.com",
+      from: process.env.MAIL_ID,
       to: data.email, 
       subject: " EASEL 인증번호입니다. ",
       text: randomnum
@@ -599,32 +526,26 @@ app.post('/uniin', function(req, res){
     
     mailTransporter.sendMail(details, function(err, result) {
       
-      
-      if (err) {
-        console.log("에러", err);
-      }
-      else {
-        console.log('email has send!');
-        console.log(randomnum);
-        console.log(checkmail);
-        console.log(test2);
-        console.log(results);
-        res.send(results);
-        // res.send("test2");
-        mailTransporter.close()
-      }
-      
-      
-      // if (randomnum == innum.innum) {
-        //   console.log('인증성공');
-          // } else {
-          //   console.log('인증실패');
-          // }
+        if (err) {
+          console.log("에러", err);
+        }
+        else {
+          console.log('email has send!');
+          console.log(randomnum);
+          console.log(checkmail);
+          mailTransporter.close()
+        }
 
-        })
-     
-     
+        
+      })
       
-      
+
+            // if (checkmail == data.innum) {
+            //   console.log('o');
+            // } else {
+            //   console.log('x');
+            // }
+            
 })
-  /////////////////////////////////
+
+
