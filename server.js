@@ -197,6 +197,7 @@ app.get('/mypageview3', function(req,res){
 
 
 
+
 ////////////////// data update College A //////////////////////// data update College A //////////////////////// data update College A ///////////////
 // 데이터를 한개만 보여줌 College A (findOne)
 app.get('/mypageview1/:id', function(req,res){
